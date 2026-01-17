@@ -18,32 +18,31 @@ with st.sidebar:
     if admin_input == ADMIN_PASSWORD:
         st.success("認証済み")
         
-        # 案件情報の入力（初期値をホウワ様にセットしておきました）
-        p_id = st.text_input("案件略称 (例: houwa)", "houwa")
-        p_date = st.text_input("日付 (例: 0119)", "0119")
+        # 19日の案件情報を初期値にセットしました
+        p_id = st.text_input("案件略称", "houwa")
+        p_date = st.text_input("日付", "0119")
         
-        # 💡 自動生成ボタン
         if st.button("✨ パスワードを自動作成"):
-            # 略称と日付をくっつけてパスワードにする
             generated = f"{p_id}{p_date}" 
             st.session_state.target_pass = generated
-            st.session_state.project = f"{p_id.upper()}案件 ({p_date})"
+            st.session_state.project = f"【{p_id.upper()}】iPhone16e (279台)"
             st.warning(f"パスワードを【 {generated} 】にセットしました！")
 
         st.divider()
-        st.write("手動で変更したい場合↓")
-        st.session_state.target_pass = st.text_input("現在のパスワード", st.session_state.target_pass)
+        st.write("現在の正解パスワード↓")
+        st.session_state.target_pass = st.text_input("パスワード手動修正", st.session_state.target_pass)
 
 # --- メイン画面 ---
 st.header(f"案件：{st.session_state.project}")
-user_pass = st.text_input("パスワードを入力してください", type="password", key="user")
+st.write("担当者から伝えられたパスワードを入力してください。")
+user_pass = st.text_input("パスワード", type="password", key="user")
 
 if st.button("認証してフォルダを開く"):
     if user_pass == st.session_state.target_pass:
-        st.success("認証成功！")
-        # ここに実際のMEGAのリンクを貼ってください
-        st.link_button("📂 MEGAで資料を確認する", "https://mega.nz/xxxx") 
+        st.success("認証成功！資料を表示します。")
+        # 野田さんの正しいリンクをここに設定しました
+        st.link_button("📂 MEGAでリストを確認する", "https://mega.nz/folder/sQ8W1BCB#sVCkHTzbntdJSpXF48FDJA") 
     else:
-        st.error("パスワードが違います。")
+        st.error("パスワードが正しくありません。")
 
 st.caption("Secure File Transfer System for Kazumi Kensetsu")
