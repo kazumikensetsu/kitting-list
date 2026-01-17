@@ -1,15 +1,27 @@
 import streamlit as st
 
-# --- 【初期設定：案件が変わるたびにここを書き換える】 ---
-# 次の「ティア」案件の時はここを "tier_v1" に変えると、iPhoneの古い記憶が消えます
-CURRENT_ID = "houwa_0117" 
+# ==========================================
+# 【ここを案件ごとに書き換えて保存してください】
+# ==========================================
 
+# 1. 案件を切り替えるたびに、ここを適当な文字に変えるとiPhoneがリフレッシュされます
+CURRENT_ID = "houwa_20260119" 
+
+# 2. 画面に表示する案件名
+PROJECT_NAME = "【HOUWA】iPhone16e (279台)"
+
+# 3. その案件の正解パスワード
+TARGET_PASSWORD = "houwa0119"
+
+# ==========================================
+
+# 強制リフレッシュの仕組み
 if 'last_id' not in st.session_state or st.session_state.last_id != CURRENT_ID:
     st.session_state.last_id = CURRENT_ID
-    st.session_state.project = "【HOUWA】iPhone16e (279台)"
-    st.session_state.target_pass = "houwa0119"
+    st.session_state.project = PROJECT_NAME
+    st.session_state.target_pass = TARGET_PASSWORD
 
-# --- 管理者パスワード ---
+# 管理者パスワード（野田さん用）
 ADMIN_PASSWORD = "noda777"
 
 st.title("🔐 資料共有システム")
@@ -21,12 +33,13 @@ with st.sidebar:
     
     if admin_input == ADMIN_PASSWORD:
         st.success("認証済み")
-        p_id = st.text_input("案件略称", "houwa")
-        p_date = st.text_input("日付", "0119")
+        st.info(f"現在の正解: {st.session_state.target_pass}")
+        p_id = st.text_input("案件略称", "new")
+        p_date = st.text_input("日付", "0000")
         
         if st.button("✨ この設定に一時変更"):
             st.session_state.target_pass = f"{p_id}{p_date}"
-            st.session_state.project = f"【{p_id.upper()}】案件"
+            st.session_state.project = f"【{p_id.upper()}】臨時案件"
             st.warning("設定を一時的に変更しました")
 
 # --- メイン画面 ---
