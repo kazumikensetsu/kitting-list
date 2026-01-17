@@ -3,14 +3,20 @@ import random
 import string
 
 # ==========================================
-# 【基本設定】
+# 【重要】案件が変わる時だけ、ここを書き換えて保存してください
 # ==========================================
-CURRENT_VERSION = "20260117_RANDOM" 
+# 日付や時刻を「手動で」書き換えるのが一番安全です
+UPDATE_ID = "20260117_v5" 
 
-if 'ver' not in st.session_state or st.session_state.ver != CURRENT_VERSION:
-    st.session_state.ver = CURRENT_VERSION
-    st.session_state.project = "【HOUWA】iPhone16e (279台)"
-    st.session_state.target_pass = "houwa0119" # 最初だけこれ
+PROJECT_NAME = "【HOUWA】iPhone16e (279台)"
+INITIAL_PASS = "houwa0119"
+# ==========================================
+
+# 初回起動時、またはUPDATE_IDが変わった時だけ実行
+if 'ver' not in st.session_state or st.session_state.ver != UPDATE_ID:
+    st.session_state.ver = UPDATE_ID
+    st.session_state.project = PROJECT_NAME
+    st.session_state.target_pass = INITIAL_PASS
     st.rerun()
 
 ADMIN_PASSWORD = "noda777"
@@ -26,19 +32,18 @@ with st.sidebar:
         st.success("✅ 認証済み")
         
         st.divider()
-        st.subheader("🎲 パスワードをランダム生成")
-        # 英数字を混ぜた8桁のランダムなパスを作る関数
-        if st.button("✨ 新しいパスを生成＆適用"):
-            chars = string.ascii_lowercase + string.digits
-            new_pass = ''.join(random.choice(chars) for i in range(8))
+        st.subheader("🎲 パスワード生成")
+        st.write("ボタンを押すと8桁のランダムパスになります")
+        if st.button("✨ ランダム生成して適用"):
+            # 英数字を混ぜた8桁
+            new_pass = ''.join(random.choices(string.ascii_lowercase + string.digits, k=8))
             st.session_state.target_pass = new_pass
             st.rerun()
 
         st.divider()
-        st.subheader("✍️ 手動設定（案件名など）")
-        m_name = st.text_input("案件表示名", st.session_state.project)
-        m_pass = st.text_input("現在のパスワード", st.session_state.target_pass)
-        
+        st.subheader("✍️ 手動設定")
+        m_name = st.text_input("案件名", st.session_state.project)
+        m_pass = st.text_input("パスワード", st.session_state.target_pass)
         if st.button("✅ 設定を保存"):
             st.session_state.project = m_name
             st.session_state.target_pass = m_pass
@@ -47,10 +52,9 @@ with st.sidebar:
 # --- メイン画面 ---
 st.header(f"📁 案件：{st.session_state.project}")
 
-# 管理者でログインしている時だけ、現在のパスワードを画面に表示する
+# 管理者の場合のみ、現在のパスワードを表示
 if admin_input == ADMIN_PASSWORD:
-    st.info(f"🔑 **現在の正解パスワード： {st.session_state.target_pass}**")
-    st.write("現場のスタッフには、上記のパスワードを伝えてください。")
+    st.warning(f"🔑 **現在のパスワード： {st.session_state.target_pass}**")
 
 st.divider()
 
@@ -62,3 +66,4 @@ if st.button("🚀 認証してフォルダを開く", use_container_width=True)
         st.link_button("📂 MEGA資料フォルダを開く", "https://mega.nz/folder/sQ8W1BCB#sVCkHTzbntdJSpXF48FDJA", use_container_width=True)
     else:
         st.error("❌ パスワードが正しくありません。")
+これは？
