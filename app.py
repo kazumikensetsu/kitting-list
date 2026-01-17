@@ -1,12 +1,16 @@
 import streamlit as st
 
-# --- 【初期設定】 ---
-ADMIN_PASSWORD = "noda777" 
+# --- 【初期設定：案件が変わるたびにここを書き換える】 ---
+# 次の「ティア」案件の時はここを "tier_v1" に変えると、iPhoneの古い記憶が消えます
+CURRENT_ID = "houwa_0117" 
 
-if 'project' not in st.session_state:
-    st.session_state.project = "案件未設定"
-if 'target_pass' not in st.session_state:
-    st.session_state.target_pass = "kazumi0000"
+if 'last_id' not in st.session_state or st.session_state.last_id != CURRENT_ID:
+    st.session_state.last_id = CURRENT_ID
+    st.session_state.project = "【HOUWA】iPhone16e (279台)"
+    st.session_state.target_pass = "houwa0119"
+
+# --- 管理者パスワード ---
+ADMIN_PASSWORD = "noda777"
 
 st.title("🔐 資料共有システム")
 
@@ -17,20 +21,13 @@ with st.sidebar:
     
     if admin_input == ADMIN_PASSWORD:
         st.success("認証済み")
-        
-        # 19日の案件情報を初期値にセットしました
         p_id = st.text_input("案件略称", "houwa")
         p_date = st.text_input("日付", "0119")
         
-        if st.button("✨ パスワードを自動作成"):
-            generated = f"{p_id}{p_date}" 
-            st.session_state.target_pass = generated
-            st.session_state.project = f"【{p_id.upper()}】iPhone16e (279台)"
-            st.warning(f"パスワードを【 {generated} 】にセットしました！")
-
-        st.divider()
-        st.write("現在の正解パスワード↓")
-        st.session_state.target_pass = st.text_input("パスワード手動修正", st.session_state.target_pass)
+        if st.button("✨ この設定に一時変更"):
+            st.session_state.target_pass = f"{p_id}{p_date}"
+            st.session_state.project = f"【{p_id.upper()}】案件"
+            st.warning("設定を一時的に変更しました")
 
 # --- メイン画面 ---
 st.header(f"案件：{st.session_state.project}")
@@ -39,10 +36,8 @@ user_pass = st.text_input("パスワード", type="password", key="user")
 
 if st.button("認証してフォルダを開く"):
     if user_pass == st.session_state.target_pass:
-        st.success("認証成功！資料を表示します。")
-        # 野田さんの正しいリンクをここに設定しました
-        st.link_button("📂 MEGAでリストを確認する", "https://mega.nz/folder/sQ8W1BCB#sVCkHTzbntdJSpXF48FDJA") 
+        st.success("認証成功！")
+        # 野田さんのMEGA共有リンク
+        st.link_button("📂 MEGAで資料を確認する", "https://mega.nz/folder/sQ8W1BCB#sVCkHTzbntdJSpXF48FDJA") 
     else:
         st.error("パスワードが正しくありません。")
-
-st.caption("Secure File Transfer System for Kazumi Kensetsu")
